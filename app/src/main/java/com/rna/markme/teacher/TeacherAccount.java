@@ -3,7 +3,9 @@ package com.rna.markme.teacher;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -55,9 +57,22 @@ public class TeacherAccount extends AppCompatActivity {
         teacherID = user.getEmail();
         String uid = user.getUid();
         txt = (TextView) findViewById(R.id.textView);
-        txt.setText(teacherID.substring(0, teacherID.length() - 10));
+        txt.setText(teacherID.substring(0, teacherID.length() - 10).toUpperCase());
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         hotspot = new Hotspot(this);
+        mAuth= FirebaseAuth.getInstance();
+        mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null){
+                    //Do anything here which needs to be done after signout is complete
+                    startActivity(new Intent(TeacherAccount.this, User.class));
+                    finish();
+                }
+                else {
+                }
+            }
+        });
 
 
     }
@@ -68,36 +83,43 @@ public class TeacherAccount extends AppCompatActivity {
     }
 
     public void signOut(View view) {
-        hotspot.stop();
-        wifiManager.setWifiEnabled(true);
-        mAuth = FirebaseAuth.getInstance();
+        //hotspot.stop();
+        //wifiManager.setWifiEnabled(true);
         mAuth.signOut();
-        startActivity(new Intent(TeacherAccount.this, User.class));
-        finishAffinity();
+        //Toast.makeText(this, "Signing Out", Toast.LENGTH_LONG).show();
+
     }
 
     public void makeSlot(View view) {
-        mLoadingIndicator.setVisibility(View.VISIBLE);
+
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
 
         lectureTag=subject.getText().toString();
         if(TextUtils.isEmpty(lectureTag)){
             Toast.makeText(this,"Enter Lecture-TAG",Toast.LENGTH_SHORT).show();
         }
         else {
-
+            mLoadingIndicator.setVisibility(View.VISIBLE);
             final Map<String, Object> Bssid = new HashMap<>();
             Bssid.put("Bssid", getBssid());
-            db.collection(teacherID.substring(0, teacherID.length() - 10)).document(lectureTag).set(Bssid, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            db.collection(teacherID.substring(0, teacherID.length() - 10)).document(lectureTag).set(Bssid,
+                    SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     txt.setText(teacherID.substring(0, teacherID.length() - 10)+"\n Slot Created!");
                     Toast.makeText(TeacherAccount.this, "SLOT CREATED", Toast.LENGTH_SHORT).show();
-                    hotspot.start("Hotspot-Android", "12345678");
+                    //hotspot.start("Hotspot-Android", "12345678");
                     mLoadingIndicator.setVisibility(View.INVISIBLE);
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                        if(!hotspot.isON())
+                        Toast.makeText(TeacherAccount.this, "Turn on your Hotspot", Toast.LENGTH_LONG).show();
+
+                    }
+
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -117,7 +139,7 @@ public class TeacherAccount extends AppCompatActivity {
         } else {
         lectureTag=subject.getText().toString();
             hotspot.stop();
-            wifiManager.setWifiEnabled(true);
+            //wifiManager.setWifiEnabled(true);
             Intent intent = new Intent(TeacherAccount.this, GetAttendance.class);
             intent.putExtra("subTag", lectureTag);
             startActivity(intent);

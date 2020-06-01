@@ -116,31 +116,23 @@ public class TouchIdAuth extends AppCompatActivity {
     }
 
     public static void markAttendance(final Context context){
-//        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-//        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-//                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-//            //we are connected to a network
-//            connected = true;
-//        } else
-//            connected = false;
-        if (true) {
             Toast.makeText(context, "Wait your Attendance is being marked", Toast.LENGTH_SHORT).show();
             final Map<String, Object> user = new HashMap<>();
-            user.put(studentID+" -"+level.toString(), true);
+            user.put(studentID,Integer.toString(Math.abs(level)));
             db.collection(teacherID).document(lectureTag).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            db.collection(teacherID).document(lectureTag).set(user,SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            db.collection(teacherID).document(lectureTag).set(user,SetOptions.merge()).addOnCompleteListener(
+                                    new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     Toast.makeText(context, "Attendance Marked", Toast.LENGTH_SHORT).show();
                                     mFingerprintImage.setImageResource(R.mipmap.action_done_web2);
                                     mParaLabel.setTextColor(ContextCompat.getColor(context, R.color.colorgreen));
                                     mParaLabel.setText("Attendance Marked");
-
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -148,26 +140,16 @@ public class TouchIdAuth extends AppCompatActivity {
                                     mFingerprintImage.setImageResource(R.mipmap.action_close);
                                     mParaLabel.setText("Try Again\nAttendance Not Marked");
                                     Toast.makeText(context, "Faliure: Try Again", Toast.LENGTH_SHORT).show();
-
                                 }
-                            });
-                        } else {
+                            }); } else {
                             mFingerprintImage.setImageResource(R.mipmap.action_close);
                             mParaLabel.setText("No such document");
                             Toast.makeText(context, "No such document", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                    else{
+                        } } else{
                         mFingerprintImage.setImageResource(R.mipmap.action_close);
                         mParaLabel.setText("Try Again\nAttendance Not Marked");
                         Toast.makeText(context, "Faliure: Try Again", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        } else {
-            Toast.makeText(context, "Please Turn on your Internet", Toast.LENGTH_SHORT).show();
-        }
+                    } }});
     }
 
     @TargetApi(Build.VERSION_CODES.M)

@@ -18,7 +18,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rna.markme.student.StudentAccount;
 import com.rna.markme.student.StudentLogin;
+import com.rna.markme.teacher.TeacherAccount;
 import com.rna.markme.teacher.TeacherLogin;
 
 public class User extends AppCompatActivity {
@@ -45,11 +47,11 @@ public class User extends AppCompatActivity {
                     String ANDROIDID = dataSnapshot.child("android").getValue().toString();
                     if (TYPE.equals("student")) {
                         if(ANDROIDID.equals(Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID)))
-                        startActivity(new Intent(User.this, StudentLogin.class));
+                        startActivity(new Intent(User.this, StudentAccount.class));
                         else Toast.makeText(User.this, "Device Doesn't Match", Toast.LENGTH_SHORT).show();
                     } else {
                         if(ANDROIDID.equals(Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID)))
-                        startActivity(new Intent(User.this, TeacherLogin.class));
+                        startActivity(new Intent(User.this, TeacherAccount.class));
                         else Toast.makeText(User.this, "Device Doesn't Match", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -80,10 +82,18 @@ public class User extends AppCompatActivity {
     }
 
     public void register(View view) {
-        Intent numbersIntent = new Intent("android.intent.action.SENDTO", Uri.fromParts("mailto","markmeattendance@gmail.com",null));
-        numbersIntent.putExtra(Intent.EXTRA_SUBJECT, "New Registration");
-        numbersIntent.putExtra(Intent.EXTRA_TEXT, "Registration No.:\nType: \n\n" +
-                "Android ID: "+Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID));
-        startActivity(numbersIntent);
+//        Intent numbersIntent = new Intent("android.intent.action.SENDTO", Uri.fromParts("mailto","markmeattendance@gmail.com",null));
+//        numbersIntent.putExtra(Intent.EXTRA_SUBJECT, "New Registration");
+        String s=Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID);
+//        numbersIntent.putExtra(Intent.EXTRA_TEXT, "Registration No.:\nType: \n\n" +
+//                "Android ID: "+s);
+//        startActivity(numbersIntent);
+        Intent email = new Intent(Intent.ACTION_SEND);
+        email.putExtra(Intent.EXTRA_EMAIL, new String[]{"markmeattendance@gmail.com"});
+        email.putExtra(Intent.EXTRA_SUBJECT, "New Registration");
+        email.putExtra(Intent.EXTRA_TEXT, "Registration No.: \n"+"Type: \n\n" +
+                "Android ID: "+s);
+        email.setType("message/rfc822");
+        startActivity(Intent.createChooser(email, "Send Mail Using :"));
     }
 }

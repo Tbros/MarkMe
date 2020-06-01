@@ -40,8 +40,8 @@ public class StudentLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_login);
 
-        emailText= (EditText) findViewById(R.id.userEmail);
-        passText= (EditText) findViewById(R.id.userPass);
+        emailText= (EditText) findViewById(R.id.userEmailS);
+        passText= (EditText) findViewById(R.id.userPassS);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         lin =findViewById(R.id.lin);
 
@@ -67,14 +67,14 @@ public class StudentLogin extends AppCompatActivity {
                                         mLoadingIndicator.setVisibility(View.GONE);
                                         lin.setVisibility(View.VISIBLE);
                                         Toast.makeText(StudentLogin.this, "Device doesn't match", Toast.LENGTH_SHORT).show();
-                                        mAuth.signOut();
+                                       // mAuth.signOut();
                                     }
                                 }
                                 else{
                                     mLoadingIndicator.setVisibility(View.GONE);
                                     lin.setVisibility(View.VISIBLE);
-                                    mAuth.signOut();
-                                    Toast.makeText(StudentLogin.this, "Something goes wrong!", Toast.LENGTH_SHORT).show();
+                                   // mAuth.signOut();
+                                    Toast.makeText(StudentLogin.this, "Not a student account", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -100,7 +100,7 @@ public class StudentLogin extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public void loginButtonClicked(View view) {
+    public void loginButtonClickedS(View view) {
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
 

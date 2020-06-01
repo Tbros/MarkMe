@@ -38,8 +38,8 @@ public class TeacherLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_login);
-        emailText= (EditText) findViewById(R.id.userEmail);
-        passText= (EditText) findViewById(R.id.userPass);
+        emailText= (EditText) findViewById(R.id.userEmailT);
+        passText= (EditText) findViewById(R.id.userPassT);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         lin =findViewById(R.id.lin);
 
@@ -65,15 +65,15 @@ public class TeacherLogin extends AppCompatActivity {
                                 else {
                                     mLoadingIndicator.setVisibility(View.GONE);
                                     lin.setVisibility(View.VISIBLE);
-                                    mAuth.signOut();
+                                    //mAuth.signOut();
                                     Toast.makeText(TeacherLogin.this, "Device doesn't match", Toast.LENGTH_SHORT).show();
                                 }
                             }
                             else{
                                 mLoadingIndicator.setVisibility(View.GONE);
                                 lin.setVisibility(View.VISIBLE);
-                                mAuth.signOut();
-                                Toast.makeText(TeacherLogin.this, "Something goes wrong!", Toast.LENGTH_SHORT).show();
+                                //mAuth.signOut();
+                                Toast.makeText(TeacherLogin.this, "Not a teacher account", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -100,7 +100,7 @@ public class TeacherLogin extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public void loginButtonClicked(View view) {
+    public void loginButtonClickedT(View view) {
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
 

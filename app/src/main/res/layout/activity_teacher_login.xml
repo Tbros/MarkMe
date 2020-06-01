@@ -36,7 +36,7 @@
             app:fontFamily="@font/rubik_medium"
             android:textColor="#007aff"
             android:textColorHint="#90007aff"
-            android:id="@+id/userEmail"
+            android:id="@+id/userEmailT"
             />
 
         <EditText
@@ -45,13 +45,13 @@
             android:hint="Enter password"
             app:fontFamily="@font/rubik_medium"
             android:textColor="#ca000000"
-            android:id="@+id/userPass"
+            android:id="@+id/userPassT"
             />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:onClick="loginButtonClicked"
+            android:onClick="loginButtonClickedT"
             android:text="Login"
             app:fontFamily="@font/rubik_medium"
             android:layout_marginTop="5dp"

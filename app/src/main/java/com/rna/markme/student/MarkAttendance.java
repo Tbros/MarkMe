@@ -105,7 +105,7 @@ public class MarkAttendance extends AppCompatActivity implements View.OnClickLis
                 //mark(findViewById(R.id.MARK));
                 mLoadingIndicator.setVisibility(View.INVISIBLE);
                 textStatus.setVisibility(View.VISIBLE);
-                return "Found in Class \uD83D\uDC4D\uD83C\uDFFB"+lev;
+                return "Found in Class \uD83D\uDC4D\uD83C\uDFFB";
             }
         }
         b=false;
@@ -118,7 +118,8 @@ public class MarkAttendance extends AppCompatActivity implements View.OnClickLis
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
         id = teacherID.getText().toString();
         subTag=lectureTag.getText().toString();
         if (TextUtils.isEmpty(id)||TextUtils.isEmpty(subTag)) {
@@ -129,7 +130,7 @@ public class MarkAttendance extends AppCompatActivity implements View.OnClickLis
                 intent.putExtra("studentIDp",studentID);
                 intent.putExtra("idp",id);
                 intent.putExtra("subTagp",subTag);
-                intent.putExtra("level",lev);
+                intent.putExtra("level",Math.abs(lev));
                 startActivity(intent);
             }
             else {
@@ -144,15 +145,22 @@ public class MarkAttendance extends AppCompatActivity implements View.OnClickLis
                 getSystemService(Context.INPUT_METHOD_SERVICE);
 
         inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        mLoadingIndicator.setVisibility(View.VISIBLE);
-        textStatus.setVisibility(View.INVISIBLE);
+
 //        textStatus.setText("wait...");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_LOCATION);
         }else{
+            id = teacherID.getText().toString();
+            subTag=lectureTag.getText().toString();
+            if (TextUtils.isEmpty(id)||TextUtils.isEmpty(subTag)) {
+                Toast.makeText(this, "Enter teacher id && Lecture-TAG", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                textStatus.setVisibility(View.INVISIBLE);
             teacherID.setFocusable(false);
             lectureTag.setFocusable(false);
-            scanWifiNetworks();
+            scanWifiNetworks();}
         }
 
     }
@@ -192,7 +200,6 @@ public class MarkAttendance extends AppCompatActivity implements View.OnClickLis
     };
 
     public String getBssid(){
-
         id = teacherID.getText().toString();
         subTag=lectureTag.getText().toString();
         if (TextUtils.isEmpty(id)||TextUtils.isEmpty(subTag)) {
@@ -227,8 +234,6 @@ public class MarkAttendance extends AppCompatActivity implements View.OnClickLis
                 } else {
                     Toast.makeText(this, "Please Turn on your Internet", Toast.LENGTH_SHORT).show();
                 }
-
-
         }
         return s;
     }
